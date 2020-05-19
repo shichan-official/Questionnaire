@@ -6,11 +6,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var progressBar: UIProgressView!
     @IBOutlet weak var trueBtn: UIButton!
     @IBOutlet weak var falseBtn: UIButton!
+    @IBOutlet weak var score: UILabel!
     
     var quizEngine = QuizEngine()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateScore()
         updateProgressBar()
         updateUi()
     }
@@ -25,6 +27,7 @@ class ViewController: UIViewController {
         
         if(answerStatus) {
             // correct answer
+            quizEngine.addScore()
             sender.backgroundColor = UIColor.green
         } else {
             // wrong answer
@@ -32,7 +35,7 @@ class ViewController: UIViewController {
         }
         
         quizEngine.nextQuestion()
-        
+        updateScore()
         updateProgressBar()
         
         Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(updateUi), userInfo:nil, repeats: false)
@@ -46,6 +49,10 @@ class ViewController: UIViewController {
     
     func updateProgressBar() {
         progressBar.progress = quizEngine.calculateProgress()
+    }
+    
+    func updateScore() {
+        score.text = "Score: \(quizEngine.score)"
     }
 }
 

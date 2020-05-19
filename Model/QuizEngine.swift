@@ -19,6 +19,8 @@ struct QuizEngine {
     
     var questionIndex = 0
     
+    var score = 0
+    
     func verifyAnswer(_ answer: Bool) -> Bool {
         if(answer == questions[questionIndex].answer) {
             return true
@@ -27,11 +29,16 @@ struct QuizEngine {
         }
     }
     
+    mutating func addScore() {
+        score += 1
+    }
+    
     mutating func nextQuestion() {
         if(questionIndex + 1 < questions.count) {
             questionIndex += 1
         } else {
             questionIndex = 0
+            score = 0
         }
     }
     
