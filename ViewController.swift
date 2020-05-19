@@ -8,9 +8,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var falseBtn: UIButton!
     
     let questions = [
-        Question(question: "Today is Friday", answer: true),
-        Question(question: "Everyday is Friday", answer: true),
-        Question(question: "Tomorrow is Monday", answer: false)
+        Question(q: "Today is Friday", a: true),
+        Question(q: "Everyday is Friday", a: true),
+        Question(q: "Tomorrow is Monday", a: false),
+        Question(q: "Yesterday was Tuesday", a: false),
+        Question(q: "Tomorrow is Friday", a: true)
     ]
     
     var questionIndex = 0
@@ -18,9 +20,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        progressBar.progress = 0.0
+        updateProgressBar()
         updateUi()
     }
+    
     @IBAction func answerPressed(_ sender: UIButton) {
         var answer = false
         if(sender.currentTitle == "True") {
@@ -29,8 +32,10 @@ class ViewController: UIViewController {
         
         if(answer == questions[questionIndex].answer) {
             // correct answer
+            sender.backgroundColor = UIColor.green
         } else {
             // wrong answer
+            sender.backgroundColor = UIColor.red
         }
         
         if(questionIndex + 1 < questions.count) {
@@ -38,12 +43,20 @@ class ViewController: UIViewController {
         } else {
             questionIndex = 0
         }
-        progressBar.progress = Float(questionIndex) / Float(questions.count)
-        updateUi()
+        
+        updateProgressBar()
+        
+        Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(updateUi), userInfo:nil, repeats: false)
     }
     
-    func updateUi() {
+    @objc func updateUi() {
         questionText.text = questions[questionIndex].question
+        trueBtn.backgroundColor = UIColor.clear
+        falseBtn.backgroundColor = UIColor.clear
+    }
+    
+    func updateProgressBar() {
+        progressBar.progress = Float(questionIndex + 1) / Float(questions.count)
     }
     
 
