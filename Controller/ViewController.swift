@@ -7,19 +7,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var trueBtn: UIButton!
     @IBOutlet weak var falseBtn: UIButton!
     
-    let questions = [
-        Question(q: "Today is Friday", a: true),
-        Question(q: "Everyday is Friday", a: true),
-        Question(q: "Tomorrow is Monday", a: false),
-        Question(q: "Yesterday was Tuesday", a: false),
-        Question(q: "Tomorrow is Friday", a: true)
-    ]
-    
-    var questionIndex = 0
+    var quizEngine = QuizEngine()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         updateProgressBar()
         updateUi()
     }
@@ -30,7 +21,9 @@ class ViewController: UIViewController {
             answer = true
         }
         
-        if(answer == questions[questionIndex].answer) {
+        let answerStatus = quizEngine.verifyAnswer(answer)
+        
+        if(answerStatus) {
             // correct answer
             sender.backgroundColor = UIColor.green
         } else {
@@ -38,11 +31,7 @@ class ViewController: UIViewController {
             sender.backgroundColor = UIColor.red
         }
         
-        if(questionIndex + 1 < questions.count) {
-            questionIndex += 1
-        } else {
-            questionIndex = 0
-        }
+        quizEngine.nextQuestion()
         
         updateProgressBar()
         
@@ -50,15 +39,13 @@ class ViewController: UIViewController {
     }
     
     @objc func updateUi() {
-        questionText.text = questions[questionIndex].question
+        questionText.text = quizEngine.getCurrentQuestion()
         trueBtn.backgroundColor = UIColor.clear
         falseBtn.backgroundColor = UIColor.clear
     }
     
     func updateProgressBar() {
-        progressBar.progress = Float(questionIndex + 1) / Float(questions.count)
+        progressBar.progress = quizEngine.calculateProgress()
     }
-    
-
 }
 
